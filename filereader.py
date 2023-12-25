@@ -5,11 +5,29 @@ from openai import OpenAI
 import os
 from openai import OpenAI
 from pdf2image import convert_from_path
+import json
+import sqlite3
+from types import SimpleNamespace
 
+
+connection = sqlite3.connect("databases/database.db")
+cursor = connection.cursor()
+cursor.execute(
+    """
+        CREATE TABLE IF NOT EXISTS
+        flashcards(
+            Id PRIMARY KEY INTEGER,
+            Front TEXT,
+            Back TEXT
+        )
+"""
+)
 
 # this helps use the tesseract OCR executable file from the directory specified
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 # the match case statement is used to check the suffix of the file and print the appropriate message
+
+
 try:
     path = input("Enter the path to the file: ")
     path.replace("\\", "/")
@@ -58,7 +76,7 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 prompt = f"from my notes = {text} Create 20 flashcards with concise information on the key concepts covered. Each flashcard should address a specific point from the notes. Ensure that the content is clear and suitable for learning purposes."
 
 response = client.chat.completions.create(
-    model="gpt-4-1106-preview",
+    model="gpt-3.5-turbo-1106",
     response_format={"type": "json_object"},
     seed=10,
     temperature=0.2,
@@ -71,6 +89,15 @@ response = client.chat.completions.create(
         {"role": "user", "content": prompt},
     ],
 )
-
+# currently response is in format 'flashcards'-> id ->  front -> back
 
 print(response.choices[0].message.content)
+rKey = json.loads(response.choices[0].message.content)
+for key in rKey["flashcards"]:
+    print(f"""{key['id']}, {key['front']}, {key['back']}""")
+
+
+# this is where we want to make the decision to either add the card to the table or not (maybe to test using input())
+
+connection.commit()
+connection.close()
