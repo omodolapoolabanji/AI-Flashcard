@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Flashcard</title>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/main.css')}}">
+
+</head>
+<body>
+    <header>
+        <div class="Header">
+            <img src="{{url_for('static', filename = 'images/brainstorm.png')}}" alt="Brain Logo">
+            <h2>FlashCard AI</h2>
+        </div>
+    </header>
+
+    <nav>
+
+
+    </nav>
+    
+    <!--Body content goes here-->
+    <h3>Upload File Here</h3>
+    <div class="content">
+        <form action="" method="post" enctype="multipart/form-data">
+            <fieldset>
+           {{form.hidden_tag()}}
+           <p>
+            {{ form.file.label }}
+           {{form.file}}
+            {{% for error in file.form.errors %}}
+               
+           <span class="error-message" > {{ error }} </span>
+           {% endfor %}
+        </p>
+
+         <p> {{form.submit()}} </p>
+            </fieldset>
+        </form>
+    </div>
+
+
+
+    <!--footer-->
+    <footer>
+        <p>Get to know me</p>
+        <div class="socials">
+            <div class= 'Github'>
+                <a href="">
+                <img src="{{url_for('static', filename = 'images/social-media.png')}}" alt="Github">
+                <p>Github</p>
+                </a>
+            </div>
+            <div class='Portfolio'>
+                <a href="">
+                <img src="{{url_for('static', filename = 'images/user.png')}}" alt="Portfolio">
+                <p>Portfolio</p>
+                </a>
+            </div>
+            <div class="LinkedIn">
+                <a href="">
+                    <img src="{{url_for('static', filename= 'images/linkedin.png')}}" alt="LinkedIn">
+                    <p>LinkedIn</p>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+
+
+    
+</body>
+</html>
