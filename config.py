@@ -5,5 +5,5 @@ load_dotenv()
 
 
 class Config(object):
-    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SECRET_KEY = os.urandom(32)
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")

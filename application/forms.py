@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from flask_wtf.file import FileRequired, FileAllowed
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, ValidationError  # Add missing import
 
 
 class uploadForm(FlaskForm):

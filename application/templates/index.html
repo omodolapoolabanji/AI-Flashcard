@@ -1,0 +1,28 @@
+{% extends 'layout.html'%}
+
+
+{% block content %}
+ <!--Body content goes here-->
+ <h3>Upload File Here</h3>
+ <div class="content">
+     <form action="" method="post" enctype="multipart/form-data">
+         <fieldset>
+        
+
+        {{form.hidden_tag()}}
+        <p>
+            {{ form.file.label }}
+            {{form.file}}
+            {% for error in form.file.errors %}
+            <span class="error-message" > {{ error }} </span>
+            {% endfor %}
+        </p>
+
+        <p> {{form.submit()}} </p>
+        </fieldset>
+     </form>
+ </div>
+
+
+
+{% endblock %}
