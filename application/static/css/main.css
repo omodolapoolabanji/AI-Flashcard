@@ -1,10 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;900&display=swap");
 body {
   font-family: "Roboto", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 .Header {
   display: flex;
   justify-content: center;
+  background-color: grey;
+  color: white;
 }
 
 .Header img {
@@ -14,4 +20,38 @@ body {
 }
 .logo {
   margin-top: 5px;
+}
+.socials {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 0 20px;
+}
+.social-icons {
+}
+
+.logo-icons {
+  width: 30px;
+  height: 30px;
+  margin-right: 20px;
+}
+footer {
+  background-color: grey;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  color: white;
+}
+footer p {
+  text-align: center;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+.content {
+  padding-top: 20px;
+  display: box;
+  text-align: center;
+  width: 100%;
 }
