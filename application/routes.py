@@ -1,6 +1,30 @@
-from application import app
+from application import app, api
 from flask import render_template, Flask, request, redirect, url_for
 from application.forms import uploadForm
+from flask_restx import Resource
+
+
+@app.route("/api", "/api/")
+# this gets all
+class GetAndPost(Resource):
+    def get(self):
+        pass
+
+    def post(self):
+        pass
+
+
+# this class is intended to get a specific flashcard
+@app.route("/api/<idx>")
+class GetUpdateDelete(Resource):
+    def get(self, idx):
+        pass
+
+    def put(self):
+        pass
+
+    def delete(self):
+        pass
 
 
 @app.route("/")
