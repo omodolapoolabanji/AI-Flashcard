@@ -1,10 +1,12 @@
 from application import app, api
-from flask import render_template, Flask, request, redirect, url_for
+from flask import render_template, Flask, request, redirect, url_for, json, jsonify
 from application.forms import uploadForm
 from flask_restx import Resource
+from application import processHandler
+from werkzeug.utils import secure_filename
 
 
-@app.route("/api", "/api/")
+@api.route("/api", "/api/")
 # this gets all
 class GetAndPost(Resource):
     def get(self):
@@ -18,7 +20,10 @@ class GetAndPost(Resource):
 @app.route("/api/<idx>")
 class GetUpdateDelete(Resource):
     def get(self, idx):
-        pass
+        filename = idx
+        suffix = filename.split(".")[-1]
+        text = processHandler.Handler.getText(filename, suffix)
+        return json.dumps(text)
 
     def put(self):
         pass
@@ -29,17 +34,27 @@ class GetUpdateDelete(Resource):
 
 @app.route("/")
 @app.route("/index", methods=["GET", "POST"])
-@app.route("/home")
+@app.route("/home", methods=["GET", "POST"])
 def index():
     form = uploadForm()
     if form.validate_on_submit() and request.method == "POST":
-        pass
+        file = request.files["file"]
+        filename = secure_filename(file.filename)
+        suffix = filename.split(".")[-1]
+        text = processHandler.Handler.getText(filename, suffix)
+        return redirect(url_for("flashcards", text=text))
+
     return render_template("index.html", form=form, index=True)
 
 
-@app.route("/flashcards")
+@app.route("/flashcards", methods=["GET", "POST"])
 def flashcards():
-    return render_template("flashcards.html", flashcards=True)
+    # if request.method == "POST":
+    text = request.args.get("text")
+    return render_template("flashcards.html", flashcards=True, text=text)
+
+
+# return render_template("flashcards.html", flashcards=True, text="")
 
 
 @app.route("/login", methods=["GET", "POST"])

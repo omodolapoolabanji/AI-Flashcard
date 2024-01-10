@@ -9,9 +9,10 @@ class uploadForm(FlaskForm):
         "Upload your file here: ",
         validators=[
             FileRequired(),
-            FileAllowed(["jpg", "png", "jpeg", "png"], ["Images and pdf only!"]),
+            FileAllowed(["jpg", "png", "jpeg", "png", "pdf"], ["Images and pdf only!"]),
         ],
     )
+
     submit = SubmitField("Upload")
 
     def validate_file(self, file):

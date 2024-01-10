@@ -9,9 +9,8 @@ import json
 
 
 class Handler:
-    text = ""
-
     def getText(filename, suffix):
+        text = ""
         try:
             if suffix == "pdf":
                 pages_index = []
