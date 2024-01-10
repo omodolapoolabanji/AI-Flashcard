@@ -1,9 +1,19 @@
 from application import app, api
-from flask import render_template, Flask, request, redirect, url_for, json, jsonify
+from flask import (
+    render_template,
+    Flask,
+    request,
+    redirect,
+    url_for,
+    json,
+    jsonify,
+    flash,
+)
 from application.forms import uploadForm
 from flask_restx import Resource
 from application import processHandler
 from werkzeug.utils import secure_filename
+import os
 
 
 @api.route("/api", "/api/")
@@ -32,16 +42,26 @@ class GetUpdateDelete(Resource):
         pass
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 def index():
     form = uploadForm()
     if form.validate_on_submit() and request.method == "POST":
-        file = request.files["file"]
+        file = form.file.data
+        file.save(
+            os.path.join(
+                os.path.abspath(os.path.dirname(__file__)),
+                app.config["UPLOAD_FOLDER"],
+                secure_filename(file.filename),
+            )
+        )
         filename = secure_filename(file.filename)
         suffix = filename.split(".")[-1]
-        text = processHandler.Handler.getText(filename, suffix)
+        text = processHandler.Handler.getText(
+            f"application\\static\\files\\{filename}", suffix
+        )
+        flash(filename)
         return redirect(url_for("flashcards", text=text))
 
     return render_template("index.html", form=form, index=True)
@@ -51,7 +71,18 @@ def index():
 def flashcards():
     # if request.method == "POST":
     text = request.args.get("text")
-    return render_template("flashcards.html", flashcards=True, text=text)
+    if text:
+        text = request.args.get("text")
+        return render_template(
+            "flashcards.html", flashcards=True, text=text, noFlashcards=False
+        )
+    else:
+        return render_template(
+            "flashcards.html",
+            flashcards=True,
+            text=" You have no flashcards yet!",
+            noFlashcards=True,
+        )
 
 
 # return render_template("flashcards.html", flashcards=True, text="")

@@ -6,10 +6,14 @@ import os
 from openai import OpenAI
 from pdf2image import convert_from_path
 import json
+from skimage import io
 
 
 class Handler:
     def getText(filename, suffix):
+        pytesseract.pytesseract.tesseract_cmd = r"tesseract\tesseract.exe"
+
+        filename = filename.replace("\\", "/")
         text = ""
         try:
             if suffix == "pdf":
@@ -29,9 +33,11 @@ class Handler:
 
             else:
                 print("This is an image file")
-                n_file = cv2.imread(filename)
+                n_file = io.imread(filename)
                 Nimage = cv2.cvtColor(n_file, cv2.COLOR_BGR2GRAY)
                 text = pytesseract.image_to_string(Nimage)
+
+            os.remove(filename)
 
             return text
 
