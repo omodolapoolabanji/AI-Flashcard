@@ -9,7 +9,7 @@ from flask import (
     jsonify,
     flash,
 )
-from application.forms import uploadForm
+from application.forms import uploadForm, LoginForm, RegisterForm
 from flask_restx import Resource
 from application import processHandler
 from werkzeug.utils import secure_filename
@@ -90,4 +90,22 @@ def flashcards():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("login.html", login=True)
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        flash("You have been logged in!", "success")
+        return redirect(url_for("index"))
+    return render_template("login.html", form=form, title="Login", login=True)
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        username = form.username.data
+        flash("You have been registered!", "success")
+        return redirect(url_for("index"))
+    return render_template("register.html", form=form, title="Register", register=True)

@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<h2>Register as a User</h2>
+<div class="container">
+    <form action="" name="register" method="post" novalidate>
+        <fieldset class="form-group">
+            <legend>{{title}}</legend>
+            {{form.hidden_tag()}}
+            <p>{{form.email.label}} <br>
+                {{form.email(size=40)}} <br>
+                {% for error in form.email.errors %}
+                <span style="color: red;">[{{error}}]</span>
+                {% endfor %}
+            </p>
+            <p>{{form.username.label}} <br>
+                {{form.username(size=40)}} <br>
+                {% for error in form.username.errors %}
+                <span style="color: red;">[{{error}}]</span>
+                {% endfor %}
+            </p>
+            <p>{{form.password.label}} <br>
+                {{form.password(size=40)}} <br>
+                {% for error in form.password.errors %}
+                <span style="color: red;">[{{error}}]</span>
+                {% endfor %}
+            </p>
+            <p>{{form.password_confirm.label}} <br>
+                {{form.password_confirm(size=40)}} <br>
+                {% for error in form.password_confirm.errors %}
+                <span style="color: red;">[{{error}}]</span>
+                {% endfor %}
+            </p>
+            <p>{{form.submit()}}</p>
+
+
+
+
+        </fieldset>
+
+
+    </form>
+
+
+</div>
+
+
+{% endblock %}
