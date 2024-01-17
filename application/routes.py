@@ -8,8 +8,10 @@ from flask import (
     json,
     jsonify,
     flash,
+    session,
 )
 from application.forms import uploadForm, LoginForm, RegisterForm
+from application.models import User, Flashcards
 from flask_restx import Resource
 from application import processHandler
 from werkzeug.utils import secure_filename
@@ -90,22 +92,47 @@ def flashcards():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get("username"):
+        return redirect(url_for("index"))
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        flash("You have been logged in!", "success")
+
+        user = User.objects(email=email).first()
+        if user and user.get_password(password):
+            flash("You have been logged in!", "success")
+            session["user_id"] = user.user_id
+            session["username"] = user.username
+            return redirect(url_for("index"))
+        else:
+            flash("Login Unsuccessful. Please check email and password", "danger")
         return redirect(url_for("index"))
     return render_template("login.html", form=form, title="Login", login=True)
 
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if session.get("username"):
+        return redirect(url_for("index"))
     form = RegisterForm()
     if form.validate_on_submit():
+        user_id = User.objects.count() + 1
+
         email = form.email.data
         password = form.password.data
         username = form.username.data
+
+        user = User(user_id=user_id, email=email, username=username)
+        user.set_password(password)
+        user.save()
         flash("You have been registered!", "success")
         return redirect(url_for("index"))
     return render_template("register.html", form=form, title="Register", register=True)
+
+
+@app.route("/logout")
+def logout():
+    session.pop("user_id", None)
+    session.pop("username", None)
+    return redirect(url_for("index"))
