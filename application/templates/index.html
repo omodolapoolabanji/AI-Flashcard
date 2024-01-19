@@ -8,6 +8,12 @@
  <div >
      <form action="{{ url_for('index') }}" method="post" enctype="multipart/form-data">
          <fieldset>
+
+            {% for message in get_flashed_messages() %}
+
+            <div class="flash" style="color: green">{{ message }}</div>
+
+            {% endfor %}
         
 
         {{form.hidden_tag()}}

@@ -43,3 +43,30 @@ class Handler:
 
         except Exception as e:
             return e
+
+    def return_flashcards(text):
+        try:
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+            prompt = f"from my notes = {text} Create 20 flashcards with concise information on the key concepts covered. Each flashcard should address a specific point from the notes. Ensure that the content is clear and suitable for learning purposes."
+
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo-1106",
+                response_format={"type": "json_object"},
+                seed=10,
+                temperature=0.2,
+                n=20,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a helpful assistant designed to output JSON",
+                    },
+                    {"role": "user", "content": prompt},
+                ],
+            )
+            # currently response is in format 'flashcards'-> id ->  front -> back
+
+            return response.choices[0].message.content
+
+        except Exception as e:
+            return e

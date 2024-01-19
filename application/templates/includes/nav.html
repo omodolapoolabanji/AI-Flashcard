@@ -7,12 +7,14 @@
             <li class="nav-item">
                 <a class="nav-link  {% if flashcards %} active {% endif %}" href="{{url_for('flashcards')}}">Flashcards</a>
             </li>
+            {% if not session['username'] %}
             <li class="nav-item">
                 <a class="nav-link  {% if register %} active {% endif %}" href="{{url_for('register')}}">Register</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link  {% if login %} active {% endif %}" href="{{url_for('login')}}">Login</a>
             </li>
+            {% endif %}
         </ul>
     </div>
 </nav>

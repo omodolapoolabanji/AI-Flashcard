@@ -63,7 +63,7 @@ def index():
         text = processHandler.Handler.getText(
             f"application\\static\\files\\{filename}", suffix
         )
-        flash(filename)
+        # flash(filename)
         return redirect(url_for("flashcards", text=text))
 
     return render_template("index.html", form=form, index=True)
@@ -100,14 +100,14 @@ def login():
         password = form.password.data
 
         user = User.objects(email=email).first()
-        if user and user.get_password(password):
+        if user and user.check_password(password):
             flash("You have been logged in!", "success")
             session["user_id"] = user.user_id
             session["username"] = user.username
             return redirect(url_for("index"))
         else:
             flash("Login Unsuccessful. Please check email and password", "danger")
-        return redirect(url_for("index"))
+
     return render_template("login.html", form=form, title="Login", login=True)
 
 
