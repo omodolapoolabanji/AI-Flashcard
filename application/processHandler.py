@@ -66,7 +66,17 @@ class Handler:
             )
             # currently response is in format 'flashcards'-> id ->  front -> back
 
+            """
+            """
+
             return response.choices[0].message.content
 
         except Exception as e:
             return e
+
+    def json_toflashcards(response):
+        rKey = json.loads(response)
+        flashcards = []
+        for key in rKey["flashcards"]:
+            flashcards.append(f"""{key['id']}, {key['front']}, {key['back']}""")
+        return flashcards

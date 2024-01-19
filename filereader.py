@@ -76,7 +76,8 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 prompt = f"from my notes = {text} Create 20 flashcards with concise information on the key concepts covered. Each flashcard should address a specific point from the notes. Ensure that the content is clear and suitable for learning purposes."
 
 response = client.chat.completions.create(
-    model="gpt-3.5-turbo-1106",
+    # gpt-3.5-turbo-1106
+    model="text-davinci-003",
     response_format={"type": "json_object"},
     seed=10,
     temperature=0.2,

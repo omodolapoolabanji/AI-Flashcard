@@ -63,6 +63,7 @@ def index():
         text = processHandler.Handler.getText(
             f"application\\static\\files\\{filename}", suffix
         )
+        text = processHandler.Handler.return_flashcards(text)
         # flash(filename)
         return redirect(url_for("flashcards", text=text))
 
