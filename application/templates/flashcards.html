@@ -4,11 +4,29 @@
 
 <p class="text {% if noFlashcards%} alert alert-danger{% endif %}" >{{text}}</p>
 
-{% for message in get_flashed_messages() %}
+{% if not noFlashcards %}
+    {% for results in index %}
+        {% for k,v in results.items() %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{k}}</h5>
+                    <p class="card-text">{{v}}</p>
+                    
+                    <a href="" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
 
-<p>{{message}}</p>
+    {% endfor %}
 
-{% endfor %}
+{% endif %}
+
+{% with message = get_flashed_messages() %}
+{% for messages in message %}
+    <p>{{messages}}</p>
+{% endfor %}    
+
+{% endwith %}
 
 
 {% endblock %}

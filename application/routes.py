@@ -64,8 +64,10 @@ def index():
             f"application\\static\\files\\{filename}", suffix
         )
         text = processHandler.Handler.return_flashcards(text)
+        result = processHandler.Handler.json_toflashcards(text)
+
         # flash(filename)
-        return redirect(url_for("flashcards", text=text))
+        return redirect(url_for("flashcards", text=text, result=result))
 
     return render_template("index.html", form=form, index=True)
 
@@ -74,10 +76,28 @@ def index():
 def flashcards():
     # if request.method == "POST":
     text = request.args.get("text")
+    result = request.args.get("result")
     if text:
-        text = request.args.get("text")
+        """under this line is solely for debugging purposes"""
+        text = json.loads(text)
+        n_text = text["flashcards"]
+        index = []
+        for key in n_text:
+            count = 0
+            vals = list(key.values())
+            for i in range(len(vals[::2])):
+                n_index = {vals[count]: vals[count + 1]}
+                index.append(n_index)
+                count += 1
+
+        # flash(index)
+
+        # flash(n_text)
+
+        # flash(result)
+
         return render_template(
-            "flashcards.html", flashcards=True, text=text, noFlashcards=False
+            "flashcards.html", flashcards=True, index=index, noFlashcards=False
         )
     else:
         return render_template(

@@ -75,8 +75,33 @@ class Handler:
             return e
 
     def json_toflashcards(response):
-        rKey = json.loads(response)
+        rKey = response
         flashcards = []
-        for key in rKey["flashcards"]:
-            flashcards.append(f"""{key['id']}, {key['front']}, {key['back']}""")
+        iter_list = rKey["flashcards"]
+        # for my_dict in iter_list:
+        #     for key, value in my_dict.items():
+        #         flashcards.append(value)
+
+        # for key in iter_list:
+        #     count = 0
+        #     n_list = list(key.values())
+
+        #     for i in range(len(n_list[::2])):
+        #         index = {"front": n_list[count], "back": n_list[count + 1]}
+        #         flashcards.append(index)
+        #         count += 1
+
+        # flashcard should be in format 'front' -> 'back'
+        for card in rKey.get("flashcards", []):
+            card_data = {}
+            for key, value in card.items():
+                # Assuming keys other than 'concept' and 'description' are used as 'front' and 'back'
+                card_data[key.lower()] = value
+
+            flashcards.append(card_data)
+
         return flashcards
+
+    """
+    { "flashcards": [ { "concept": "Verb suffixes for imperative and declarative sentences", "description": "Verb suffixes like aye or ye denote imperative sentences, while kSto and yelo denote declarative sentences in Yatk language." }, { "concept": "Gender-specific speech in imperative and declarative sentences", "description": "Women use aye/ye in imperative speech and ksto in declarative speech, while men use ayo/yo in imperative speech and yelo in declarative speech in Yatk language." }, { "concept": "Imperative suffixes for woman and man speaking", "description": "Imperative suffixes for woman speaking are -ye and -we, while for man speaking are -yo and -wo in Yatk language." }, { "concept": "Phoneme 'y' changes to 'w' in certain contexts", "description": "The 'y' changes to 'w' when the stem ends with 'u', 'y', and 'o' phonemes in Yatk language." }, { "concept": "Reason for changing 'y' to 'w' sound", "description": "Changing from 'y' to 'w' sound makes it easier to pronounce neighboring phonemes, especially nasal vowels, in Yatk language." }, { "concept": "Example of imperative sentences", "description": "Examples of imperative sentences in Yatk language: 'inquire secretly!' (woman speaking) - pasiye, 'be hungry!' (man speaking) - jtukheyo" } ] }
+    """
