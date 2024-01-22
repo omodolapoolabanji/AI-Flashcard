@@ -95,11 +95,36 @@ def flashcards():
         # flash(n_text)
 
         # flash(result)
+        for i in index:
+            for key, value in i.items():
+                flashcard = Flashcards(
+                    flashcard_id=Flashcards.objects.count() + 1,
+                    question=key,
+                    answer=value,
+                    user_id=session["user_id"],
+                )
+                flashcard.save()
 
         return render_template(
             "flashcards.html", flashcards=True, index=index, noFlashcards=False
         )
     else:
+        if session.get("username"):
+            index = Flashcards.objects.filter(user_id=session["user_id"])
+            if index:
+                return render_template(
+                    "flashcards.html",
+                    flashcards=True,
+                    index=index,
+                    noFlashcards=False,
+                )
+            else:
+                return render_template(
+                    "flashcards.html",
+                    flashcards=True,
+                    text=" You have no flashcards yet!",
+                    noFlashcards=True,
+                )
         return render_template(
             "flashcards.html",
             flashcards=True,

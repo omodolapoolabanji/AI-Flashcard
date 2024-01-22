@@ -12,12 +12,14 @@
                     <h5 class="card-title">{{k}}</h5>
                     <p class="card-text">{{v}}</p>
                     
-                    <a href="" class="btn btn-danger">Delete</a>
+                    <a href="{{url_for('flashcards')}}" class="btn btn-danger">Delete</a>
                 </div>
             </div>
         {% endfor %}
 
     {% endfor %}
+
+        
 
 {% endif %}
 
