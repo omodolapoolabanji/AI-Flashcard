@@ -22,26 +22,54 @@ import os
 # this gets all
 class GetAndPost(Resource):
     def get(self):
-        pass
+        return jsonify(User.objects.all())
 
     def post(self):
-        pass
+        data = api.payload
+        user = User(
+            user_id=User.objects.count() + 1,
+            email=data["email"],
+            username=data["username"],
+        )
+        user.set_password(data["password"])
+        user.save()
+        text = processHandler.Handler.return_flashcards(data["text"])
+        text = json.loads(text)
+        n_text = text["flashcards"]
+        index = []
+        for key in n_text:
+            count = 0
+            vals = list(key.values())
+            for i in range(len(vals[::2])):
+                n_index = {vals[count]: vals[count + 1]}
+                index.append(n_index)
+                count += 1
+        for i in index:
+            for key, value in i.items():
+                flashcard = Flashcards(
+                    flashcard_id=Flashcards.objects.count() + 1,
+                    question=key,
+                    answer=value,
+                    user_id=user.user_id,
+                )
+                flashcard.save()
+        return jsonify(User.objects(user_id=user.user_id))
 
 
 # this class is intended to get a specific flashcard
 @app.route("/api/<idx>")
 class GetUpdateDelete(Resource):
     def get(self, idx):
-        filename = idx
-        suffix = filename.split(".")[-1]
-        text = processHandler.Handler.getText(filename, suffix)
-        return json.dumps(text)
+        return jsonify(User.objects(user_id=idx))
 
     def put(self):
-        pass
+        data = api.payload
+        user = User.objects(user_id=data["user_id"]).update(**data)
+        return jsonify(User.objects(user_id=data["user_id"]))
 
     def delete(self):
-        pass
+        User.objects(user_id=api.payload["user_id"]).delete()
+        return jsonify("User is deleted!")
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -182,3 +210,11 @@ def logout():
     session.pop("user_id", None)
     session.pop("username", None)
     return redirect(url_for("index"))
+
+
+@app.route("/delete/<int:flashcard_id>")
+def delete(flashcard_id):
+    flashcard = Flashcards.objects(flashcard_id=flashcard_id).first()
+    flashcard.delete()
+    flash("Flashcard has been deleted!", "success")
+    return redirect(url_for("flashcards"))
